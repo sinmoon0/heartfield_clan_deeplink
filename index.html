@@ -3,121 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heartfield 이동</title>
+  <title>Heartfield 이동 중...</title>
 
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f9f9f9;
       text-align: center;
-      padding: 80px 20px;
+      padding: 100px 20px;
       color: #333;
-      line-height: 1.5;
     }
 
     h1 {
       font-size: 22px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     p {
       font-size: 15px;
       color: #555;
-      margin: 10px 0;
+      margin: 8px 0;
     }
 
-    .box {
-      max-width: 420px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 14px;
-      padding: 22px 18px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-    }
-
-    .btn {
-      display: block;
-      width: 100%;
-      margin-top: 14px;
-      padding: 14px 12px;
-      border-radius: 12px;
-      background: #111;
+    a {
+      display: inline-block;
+      margin-top: 18px;
+      padding: 12px 18px;
+      background: #0066cc;
       color: #fff;
       text-decoration: none;
+      border-radius: 8px;
       font-weight: bold;
-      font-size: 16px;
     }
 
-    .btn:active {
-      opacity: 0.85;
+    a:hover {
+      opacity: 0.9;
     }
 
     .sub {
+      margin-top: 18px;
       font-size: 13px;
-      color: #777;
-      margin-top: 14px;
-    }
-
-    .tip {
-      text-align: left;
-      font-size: 14px;
-      background: #f3f3f3;
-      border-radius: 12px;
-      padding: 14px;
-      margin-top: 14px;
-      color: #444;
-    }
-
-    .tip b {
-      color: #111;
+      color: #888;
+      line-height: 1.5;
     }
   </style>
 </head>
 
 <body>
-  <div class="box">
-    <h1 id="title">잠시만 기다려 주세요…</h1>
-    <p id="desc">페이지로 이동 중입니다.</p>
-
-    <a id="openLinkBtn" class="btn" href="#">
-      링크 열기
-    </a>
-
-    <div id="kakaoTip" class="tip" style="display:none;">
-      <b>카카오톡에서 열렸어요.</b><br/>
-      카카오톡 인앱브라우저에서는 앱 이동이 막히거나 오류가 날 수 있어요.<br/><br/>
-      오른쪽 위 <b>⋮</b> 또는 <b>공유</b> 버튼을 눌러<br/>
-      <b>“기본 브라우저(사파리)로 열기”</b>로 실행해 주세요.
-    </div>
-
-    <p class="sub">
-      이동이 안 되면 버튼을 눌러 직접 열어주세요.
-    </p>
+  <div id="msg">
+    <h1>잠시만 기다려 주세요...</h1>
+    <p>클랜 화면으로 이동 중입니다.</p>
   </div>
 
   <script>
-    // ✅ 여기만 바꾸면 목적지 변경 가능
-    const TARGET_URL = "https://heartfield.co.kr/mobile/share/clan/6?clan_id=6";
+    // ✅ 이동시키고 싶은 딥링크 주소
+    const targetUrl = "https://heartfield.co.kr/mobile/share/clan/6?clan_id=6";
 
-    // UserAgent 기반 카카오톡 인앱브라우저 감지
-    const ua = navigator.userAgent.toLowerCase();
+    // ✅ 자동 이동 먼저 시도
+    // (카카오톡 인앱브라우저에서는 이게 막힐 수 있음)
+    window.location.href = targetUrl;
 
-    // 카카오톡 인앱 브라우저는 보통 "kakaotalk" 포함
-    const isKakaoInApp = ua.includes("kakaotalk");
-
-    // 버튼 링크 연결
-    const openLinkBtn = document.getElementById("openLinkBtn");
-    openLinkBtn.href = TARGET_URL;
-
-    // 카카오톡이면 자동 이동하지 말고 안내 표시
-    if (isKakaoInApp) {
-      document.getElementById("title").innerText = "카카오톡에서 열렸어요";
-      document.getElementById("desc").innerText = "아래 버튼으로 열거나, 사파리에서 열면 더 안정적입니다.";
-      document.getElementById("kakaoTip").style.display = "block";
-    } else {
-      // 그 외 브라우저는 바로 이동
-      window.location.replace(TARGET_URL);
-    }
+    // ✅ 일정 시간 후에도 이동이 안 됐으면(앱 실행 실패)
+    // 안내 화면 + 버튼 노출
+    setTimeout(() => {
+      document.getElementById("msg").innerHTML = `
+        <h1>📱 앱으로 이동하려면 버튼을 눌러주세요</h1>
+        <p>카카오톡/인스타 인앱브라우저에서는 자동 이동이 제한될 수 있습니다.</p>
+        <a href="${targetUrl}">🔗 링크 열기</a>
+        <div class="sub">
+          자동으로 이동되지 않으면<br />
+          위 버튼을 눌러 실행해 주세요.
+        </div>
+      `;
+    }, 1200);
   </script>
 </body>
 </html>
